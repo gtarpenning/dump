@@ -1,11 +1,8 @@
 import os
 import openai
-import langchain
 import argparse
 import re
 import json
-import glob
-import ast
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
@@ -34,8 +31,8 @@ def transcribe(filename: str, use_cache=True, verbose=False) -> str:
     return transcript['text']
 
 
-def parse_text_with_chatgpt(paragraph, filename, use_cache=True, verbose=False, target=False):
-    if use_cache:
+def parse_text_with_chatgpt(paragraph, filename=None, use_cache=True, verbose=False, target=False):
+    if use_cache and filename is not None:
         if f"{filename}.json" in os.listdir('tags'):
             if verbose:
                 print("Using cached tags...")
@@ -44,7 +41,7 @@ def parse_text_with_chatgpt(paragraph, filename, use_cache=True, verbose=False, 
             except Exception as e:
                 print(f"Error: {e}.  Generating new tags...")
 
-    if target == False:
+    if target is False:
         example = "Today was a tiring day. I ate a lot of bad greasy food. I'm currently tired because I had a long day at work. I also went to the gym briefly"
         preamble = f"You are an Extractor. As an Extractor you extract user content like the following:\n{example}\n"
         example2 = """{"unhealthy food", "work", "exercise"}"""
@@ -66,12 +63,16 @@ def parse_text_with_chatgpt(paragraph, filename, use_cache=True, verbose=False, 
         temperature=0,
     )
     content = response['choices'][0]['message']['content']
+    print(f"{content=}")
     # regex to extract between two curly braces
-    tags = re.findall(r'\{.*?\}', content)[0]
-    tags_dict = [a for a in ast.literal_eval(tags)]
+    tags = re.findall(r'\{.*?\}', content)
+    if len(tags) > 0:
+        tags = ",".join([x.replace('"', "").strip() for x in tags[0].split(",")])
+    else:
+        print("No tags found. Returning empty.")
+        tags = "{}"
 
-    # cache
-    json.dump(tags_dict, open(f"tags/{filename}.json", "w"))
+    print(f"{tags=}")
 
     return tags
 
