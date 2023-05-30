@@ -19,17 +19,20 @@ struct TagClusterView: View {
     
     var body: some View {
         VStack(alignment : .center) {
+            Spacer()
             if text != "" {
                 Text(text)
                     .font(.system(size:30))
                     .foregroundColor(.gray)
             }
+            Spacer()
             Text("Tags:")
                 .font(.system(size:30, weight: .bold))
             
             ForEach(tags, id: \.self) { tag in
                 TagRowView(tag: tag.value, clicked: tag.clicked)
             }
+            Spacer()
         }
     }
 }
