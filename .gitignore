@@ -4,6 +4,6 @@ __pycache__
 .terraform*
 
 # annoying xcode shit
-app/dump2/dump2.xcodeproj*
+app/dump2/dump2.xcodeproj/*
 
 tmp/
