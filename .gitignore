@@ -1,6 +1,11 @@
 .DS_store
 __pycache__
 
+<<<<<<< HEAD
 .terraform*
 
+=======
+
+.python-version
+>>>>>>> 64ddf7b (gitignore update for python version)
 tmp/
