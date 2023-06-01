@@ -11,4 +11,4 @@ ENV PYTHONUNBUFFERED 1
 
 EXPOSE 80
 
-CMD ["uvicorn", "main:app",  "--proxy-headers", "--host", "0.0.0.0", "--port", "80"]
+CMD exec gunicorn --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker --threads 8 main:app
