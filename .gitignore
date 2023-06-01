@@ -3,4 +3,5 @@ __pycache__
 
 .terraform*
 
+.python-version
 tmp/
