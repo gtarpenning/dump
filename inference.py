@@ -6,10 +6,10 @@ import os
 from typing import List, Iterable, Dict
 import argparse
 from collections import OrderedDict
-# import sklearn
+from sklearn.linear_model import LinearRegression
 
 NUM_EXAMPLES = 50
-TARGET_KEY = {"energy":0, "productivity":1, "happiness":2}
+TARGET_KEY = {"energy":0, "productivity":1, "happiness":2} #linspaced 0-n
 TAG_ADJ_CORPUS = ["very", "low", "high"]
 TAG_WORD_CORPUS = ["exercise", "work", "drinking", "food", "clean"]
 
@@ -102,6 +102,11 @@ class Preprocess:
         for f in functors:
             s = f(s)
         return s
+    
+    @staticmethod
+    def _unpack_coef_dict(d, t="\t\t"):
+        """Returns a enter + $t seperated string of dict items k : v for coef unpacking"""
+        return "".join([f"{t}{k} : {v*100:.2f}%\n" for k,v in d.items()])
 
 
 class DataLoader:
@@ -167,29 +172,78 @@ class DataLoader:
         
         return target, data
     
-    def numpify_target(self, target):
+    def numpify_target(self, target, squash=True):
         """
         target: List of Dicts
 
         Returns: np.array() with columns corresponding to TARGET_KEY and rows as samples
         """
-        for ratings in target:
-            
-        
+        target = np.array([[t[k] for k in TARGET_KEY] for t in target])
+        if squash:
+            target = target/10 # We've enforced bounding between 1-10 #TODO catch with max?
+        return target
+
+    def numpify_data(self, data):
+        """
+        returns an array of shape: N, C
+            C is the number of tags in the corpus
+
+        TODO: one-hot encoding is gross we should use tokens like they are in text models -- just a list of token ids
+        """
+        ret = np.zeros((len(data), len(self.corpus),))
+        for i, tags in enumerate(data):
+            for t in tags:
+                if self.ttoi(t) != -1:
+                    ret[i][self.ttoi(t)] = 1
+        return ret
+
+class Learn:
+    """
+    Class to handle all the logic for learning? idk
+    """
+
+    def __init__(self, data_loader=None) -> None:
+        self.fitted = False
+        self.k = 3
+        self.data_loader = data_loader
+
+    def fit_models(self, data=None, target=None, use_loader=True):
+        """
+        assuming data, target are of json/raw format not numpified.
+        """
+        if self.fitted:
+            print("Learn already fitted -- we do not support overwritting at the moment.")
+            return
+        if use_loader:
+            if self.data_loader is None and (data is None or target is None):
+                raise Exception("As self.data_loader is None you must provide data and target if using use_loader")
+            elif self.data_loader is None:
+                print("self.data_loader is None -- instantiating now")
+                self.data_loader=DataLoader()
+                self.data_loader.create_corpus(data)
+                # TODO: handle filepaths? Refactor this whole dataloader bullshit to a DATAloader and a fileloader
+            else:
+                print("Using self.data_loader")
+            X, y = self.data_loader.numpify_data(data), self.data_loader.numpify_target(target)
+
+        else:
+            print(f"{use_loader=} -- Assuming X = data and y = target")
+            X, y = data, target
+
+        self.models = {f"{k}_reg" : LinearRegression().fit(X, y[:,v]) for k,v in TARGET_KEY.items()}
+        self.fitted=True
 
 
-def make_insights(data: dict) -> Dict:
-    """ Longterm, this is a cronjob run daily/weekly/monthly to generate high-value insights """
 
-    return {
-        "category": "10% increase in energy when you sit"
-    }
-
-        
-
-def get_tags():
-    """Extract tags with a given prefix from the tags/ dir"""
-    pass
+    def __str__(self):
+        ret = ""
+        if not self.fitted or self.data_loader is None:
+            return self.__repr__()
+        for k,v in self.models.items():
+            sort_idx = np.argsort(v.coef_)
+            worst, best = {self.data_loader.itot(i) : v.coef_[i] for i in sort_idx[:self.k]}, {self.data_loader.itot(i) : v.coef_[i] for i in sort_idx[-self.k:][::-1]}
+            ret += f"Regression {k[:-3]}:\n\tBest {self.k}:\n{Preprocess._unpack_coef_dict(best)}\n\tWorst:\n{Preprocess._unpack_coef_dict(worst)}\n"
+        return ret
 
 
 def main(args):
@@ -212,6 +266,16 @@ def main(args):
     print(f"TTOI 'exercise': {data_loader.ttoi('exercise')}")
     print(f"ITOT '14': {data_loader.itot(14)}")
 
+    print("\n=========\n")
+    print(f"{data_loader.numpify_target(target)=}")
+    print(f"{data_loader.numpify_data(data)=}")
+
+    print("\n=========\n")
+
+    learner = Learn(data_loader)
+    learner.fit_models(data, target, use_loader=True)
+    print("\n=========\n")
+    print(learner)
 
 
 if __name__ == "__main__":
