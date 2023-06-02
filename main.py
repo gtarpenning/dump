@@ -1,59 +1,51 @@
-from fastapi import FastAPI, File
-from fastapi.responses import HTMLResponse
-
-from cli_v1 import parse_text_with_chatgpt
-
-from typing import Annotated
-
-import json
 import os
 
 import openai
+from flask import Flask, flash, redirect, request
+from werkzeug.utils import secure_filename
+
+from cli_v1 import parse_text_with_chatgpt
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 WHISPER_PROMPT = "Um, well, I sort of did this at 10:00, and also at 1:00 I worked out."
+UPLOAD_FOLDER = "./tmp/uploads"
+ALLOWED_EXTENSIONS = {"m4a"}
+
+app = Flask(__name__)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-app = FastAPI()
+@app.route("/transcribe/", methods=["POST"])
+def upload_file():
+    if request.method == "POST":
+        # check if the post request has the file part
+        if "file" not in request.files:
+            flash("No file part")
+            return redirect(request.url)
+        file = request.files["file"]
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == "":
+            flash("No selected file")
+            return redirect(request.url)
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        file.save(filepath)
 
-
-@app.get("/text/{filename}")
-async def get_text(filename: str):
-    if f"{filename}.txt" not in os.listdir('text'):
-        return "File not found"
-    return open(f"./text/{filename}.txt", "r").read()
-
-
-@app.get("/tags/{filename}")
-async def get_tags(filename: str):
-    if f"{filename}.json" not in os.listdir('tags'):
-        return "Tags not found"
-    return json.load(open(f"./tags/{filename}.json", "r"))
-
-@app.post("/transcribe/")
-async def create_file(file: Annotated[bytes, File(description="A file read as bytes")]):
-    print("READING: {}")
-    with open("tmp/audio.m4a", "wb") as f:
-        f.write(file)
-
-    fp = open("tmp/audio.m4a", "rb")
-    print("HITTING WHISPER")
-    transcript = openai.Audio.transcribe("whisper-1", fp, prompt=WHISPER_PROMPT)
-
-    tags = parse_text_with_chatgpt(transcript['text'], target=False)
-    tags = tags[1:-1]
-    print(f"{type(transcript)=} {transcript=} {tags=}")
-    return {"file_size": len(file), "message": transcript['text'], 'tags': tags}
+        fp = open(filepath, "rb")
+        transcript = openai.Audio.transcribe("whisper-1", fp, prompt=WHISPER_PROMPT)
+        tags = parse_text_with_chatgpt(transcript["text"], target=False)
+        tags = tags[1:-1]
+        print(f"{type(transcript)=} {transcript=} {tags=}")
+        return {"message": transcript["text"], "tags": tags}
 
 
-@app.get("/upload")
+@app.route("/", methods=["GET"])
 async def main():
     content = """
+<!doctype html>
 <body>
 <form action="/transcribe/" enctype="multipart/form-data" method="post">
 <input name="file" type="file">
@@ -61,4 +53,4 @@ async def main():
 </form>
 </body>
     """
-    return HTMLResponse(content=content)
+    return content

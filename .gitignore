@@ -3,4 +3,5 @@ __pycache__
 
 .terraform*
 
+app/dump2/dump2.xcodeproj*
 tmp/
