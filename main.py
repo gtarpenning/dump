@@ -9,8 +9,8 @@ from cli_v1 import parse_text_with_chatgpt
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 WHISPER_PROMPT = "Um, well, I sort of did this at 10:00, and also at 1:00 I worked out."
-UPLOAD_FOLDER = "./tmp/uploads"
-ALLOWED_EXTENSIONS = {"m4a"}
+UPLOAD_FOLDER = "./audio/tmp"
+ALLOWED_EXTENSIONS = {"m4a", "mp3", "wav"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -39,6 +39,10 @@ def upload_file():
         tags = parse_text_with_chatgpt(transcript["text"], target=False)
         tags = tags[1:-1]
         print(f"{type(transcript)=} {transcript=} {tags=}")
+
+        # for now, delete the files after we're done with them
+        os.remove(filepath)
+
         return {"message": transcript["text"], "tags": tags}
 
 
