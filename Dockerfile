@@ -1,14 +1,8 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11-slim
+FROM python:3.11-slim
 
-RUN pip install --upgrade pip && \
-    pip install scikit-learn openai
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
-# set env variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-EXPOSE 80
-
-CMD exec gunicorn --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker --threads 8 main:app
+CMD [ "python3", "-m" , "flask", "--app", "main.py", "run", "--host=0.0.0.0"]
