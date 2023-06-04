@@ -6,3 +6,4 @@ pre-commit
 black
 mypy
 isort
+pylint
