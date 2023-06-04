@@ -27,5 +27,5 @@ repos:
             "-rn", # Only display messages
             "-sn", # Don't display the score
             "--max-line-length=120",
-            "--disable=C0111, W0718",  # missing docstring, generic exception
+            "--disable=C0111,W0718",  # missing docstring, generic exception
           ]
