@@ -36,7 +36,12 @@ def upload_file() -> Any:
 
     out_text, tags = "", ""
     with open(filepath, "rb") as newfile:
-        transcript = openai.Audio.transcribe("whisper-1", newfile, prompt=WHISPER_PROMPT)
+        try:
+            transcript = openai.Audio.transcribe("whisper-1", newfile, prompt=WHISPER_PROMPT)
+        except openai.error.InvalidRequestError as e:
+            print(f"Error: {e}")
+            return {"message": "Error: " + str(e)}
+
         out_text = str(transcript["text"])
         tags = parse_text_with_chatgpt(out_text, target=False)
         tags = tags[1:-1]  # TODO(zam): fix me

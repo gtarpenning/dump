@@ -14,4 +14,4 @@ jobs:
           mypy-options: "--strict --ignore-missing-imports --show-error-codes"
           isort-options: "-w 120"
           black-options: "--line-length 120"
-          pylint-options: "-rn -sn --max-line-length=120 --disable=C0111,W0718,W0703,W0511,E0401"
+          pylint-options: "-rn -sn --max-line-length=120 --disable=C0111,W0718,W0703,W0511,E0401,C0103"

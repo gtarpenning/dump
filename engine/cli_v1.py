@@ -58,8 +58,8 @@ def parse_text_with_chatgpt(
                 if isinstance(tags, list):
                     return ",".join(tags)
                 return str(tags)
-            except Exception as exc:
-                print(f"Error: {exc}.  Generating new tags...")
+            except Exception as e:
+                print(f"Error: {e}.  Generating new tags...")
 
     if target is False:
         example = "Today was a tiring day. I ate a lot of bad greasy food. I'm currently tired because \
