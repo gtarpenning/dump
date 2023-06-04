@@ -31,7 +31,7 @@ def upload_file() -> Any:
             flash("No selected file")
             return redirect(request.url)
 
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename)  # type: ignore
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(filepath)
 
@@ -47,7 +47,7 @@ def upload_file() -> Any:
         return {"message": transcript["text"], "tags": tags}
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET"])  # type: ignore
 async def main() -> str:
     content = """
 <!doctype html>
