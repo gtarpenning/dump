@@ -5,3 +5,6 @@ __pycache__
 
 app/dump2/dump2.xcodeproj*
 tmp/
+
+.python-version
+
