@@ -1,10 +1,12 @@
 on:
  - push
  - pull_request
-steps:
- - uses: actions/checkout@v2  
- - name: Python Linter
-   uses: sunnysid3up/python-linter@master
-   with:
-     mypy-options: "--ignore-missing-imports --show-error-codes"
-     isort-options: "-w 100"
+jobs:
+ lint:
+  steps:
+    - uses: actions/checkout@v2  
+    - name: Python Linter
+      uses: sunnysid3up/python-linter@master
+      with:
+        mypy-options: "--ignore-missing-imports --show-error-codes"
+        isort-options: "-w 100"
