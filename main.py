@@ -1,4 +1,5 @@
 import os
+from typing import Any
 
 import openai
 from flask import Flask, flash, redirect, request
@@ -17,7 +18,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 @app.route("/transcribe/", methods=["POST"])
-def upload_file():
+def upload_file() -> Any:
     if request.method == "POST":
         # check if the post request has the file part
         if "file" not in request.files:
@@ -47,7 +48,7 @@ def upload_file():
 
 
 @app.route("/", methods=["GET"])
-async def main():
+async def main() -> str:
     content = """
 <!doctype html>
 <body>
