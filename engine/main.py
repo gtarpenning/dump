@@ -5,7 +5,7 @@ import openai
 from flask import Flask, flash, redirect, request
 from werkzeug.utils import secure_filename
 
-from engine.cli_v1 import parse_text_with_chatgpt
+from .cli_v1 import parse_text_with_chatgpt
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
