@@ -1,3 +1,4 @@
+# pylint: skip-file
 import json
 import random
 from typing import Dict, List
@@ -25,9 +26,7 @@ def make_fake_input(num_vals: int = NUM_EXAMPLES) -> List[str]:
     corp = []
     for i in range(num_vals):
         if random.random() < 0.5:
-            corp += [
-                f"{random.choice(TAG_ADJ_CORPUS)} {random.choice(TAG_WORD_CORPUS)}"
-            ]
+            corp += [f"{random.choice(TAG_ADJ_CORPUS)} {random.choice(TAG_WORD_CORPUS)}"]
         else:
             corp += [f"{random.choice(TAG_WORD_CORPUS)}"]
     return corp

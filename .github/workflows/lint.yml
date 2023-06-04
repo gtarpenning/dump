@@ -10,5 +10,8 @@ jobs:
       - name: Python Linter
         uses: sunnysid3up/python-linter@master
         with:
+          source: "engine"
           mypy-options: "--strict --ignore-missing-imports --show-error-codes"
-          isort-options: "-w 100"
+          isort-options: "-w 120"
+          black-options: "--line-length 120"
+          pylint-options: "-rn -sn --max-line-length=120 --disable=C0111, W0718"
