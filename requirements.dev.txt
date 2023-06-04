@@ -1,0 +1,8 @@
+# install base reqs
+-r build/requirements.txt
+
+# also install dev reqs
+pre-commit
+black
+mypy
+isort
