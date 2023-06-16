@@ -4,6 +4,10 @@ __pycache__
 .terraform*
 
 app/dump2/dump2.xcodeproj*
+app/dump2/dump2.xcodeproj/*
+*.pbxproj
+*.resolved
+
 tmp/
 
 .python-version

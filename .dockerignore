@@ -1,0 +1,16 @@
+# flyctl launch added from .gitignore
+**/.DS_store
+**/__pycache__
+
+**/.terraform*
+
+**/app/dump2/dump2.xcodeproj*
+**/tmp
+
+**/.python-version
+
+
+# flyctl launch added from .mypy_cache/.gitignore
+# Automatically created by mypy
+.mypy_cache/**/*
+fly.toml

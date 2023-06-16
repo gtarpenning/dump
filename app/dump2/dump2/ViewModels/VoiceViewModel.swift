@@ -114,10 +114,10 @@ class VoiceViewModel : NSObject, ObservableObject , AVAudioPlayerDelegate{
         
         AF.upload(multipartFormData: { multipartFormData in
             multipartFormData.append(self.curFileName!, withName: "file")
-        }, to: "http://127.0.0.1:8000/transcribe")
+        }, to: "https://dump-ydop2zskta-wl.a.run.app/transcribe")
             .responseDecodable(of: DecodableType.self) { response in
                 debugPrint(response)
-                if response.value != nil  {
+                if response.value != nil {
                     self.whisperText = response.value?.message ?? ""
                     
                     let raw = response.value?.tags
