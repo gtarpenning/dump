@@ -1,4 +1,4 @@
 flask[async]
 openai
 scikit-learn
-psycopg2-binary
+psycopg2

@@ -24,19 +24,19 @@ def get_db_tables(conn: psycopg2.extensions.connection) -> List[str]:
     cur.execute("SELECT * FROM information_schema.tables WHERE table_schema = 'public';")
     db_tables = cur.fetchall()
 
-    table_names = [x[2] for x in db_tables]
+    table_names: List[str] = [x[2] for x in db_tables]
 
     return table_names
 
 
-def describe_db_table(conn: psycopg2.extensions.connection, table_name: str) -> List[Dict[str, Any]]:
+def describe_db_table(conn: psycopg2.extensions.connection, table_name: str) -> List[Dict[str, str]]:
     cur = conn.cursor()
     cur.execute(
         f"SELECT table_name, column_name, data_type FROM information_schema.columns WHERE table_name = '{table_name}';"
     )
     db_table_info = cur.fetchall()
 
-    formatted = [{"col": x[1], "type": x[2]} for x in db_table_info]
+    formatted: List[Dict[str, str]] = [{"col": x[1], "type": x[2]} for x in db_table_info]
 
     return formatted
 
@@ -44,14 +44,14 @@ def describe_db_table(conn: psycopg2.extensions.connection, table_name: str) -> 
 def get_users(conn: psycopg2.extensions.connection) -> List[Dict[str, Any]]:
     cur = conn.cursor()
     cur.execute("SELECT * FROM users;")
-    users = cur.fetchall()
+    users: List[Dict[str, Any]] = cur.fetchall()
     return users
 
 
-def get_user(conn: psycopg2.extensions.connection, user_id) -> List[Dict[str, Any]]:
+def get_user(conn: psycopg2.extensions.connection, user_id) -> Dict[str, Any]:
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM users WHERE user_id = {user_id};")
-    user = cur.fetchall()
+    user: Dict[str, Any] = cur.fetchall()
     return user
 
 
@@ -70,18 +70,18 @@ def update_user(conn: psycopg2.extensions.connection, user_id, new_email) -> Non
     conn.commit()
 
 
-def get_user_tags(conn: psycopg2.extensions.connection, user_id) -> List[Dict[str, Any]]:
+def get_user_tags(conn: psycopg2.extensions.connection, user_id) -> List[Any]:
     # TODO(gst): make this better in a data range
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM tags WHERE user_id = {user_id};")
-    user_tags = cur.fetchall()
+    user_tags: List[Any] = cur.fetchall()
     return user_tags
 
 
-def get_user_transcriptions(conn: psycopg2.extensions.connection, user_id) -> List[Dict[str, Any]]:
+def get_user_transcriptions(conn: psycopg2.extensions.connection, user_id) -> List[Any]:
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM transcriptions WHERE user_id = {user_id};")
-    user_transcriptions = cur.fetchall()
+    user_transcriptions: List[Any] = cur.fetchall()
     return user_transcriptions
 
 
