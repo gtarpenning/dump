@@ -6,8 +6,10 @@ from flask import Flask, flash, redirect, request
 from werkzeug.utils import secure_filename
 
 from .cli_v1 import parse_text_with_chatgpt
+from .db import connect
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
+conn = connect.get_conn()
 
 WHISPER_PROMPT = "Um, well, I sort of did this at 10:00, and also at 1:00 I worked out."
 UPLOAD_FOLDER = "./data/audio/remote"
@@ -51,7 +53,18 @@ def upload_file() -> Any:
     # for now, delete the files after we're done with them
     os.remove(filepath)
 
+    connect.put_user_transcription(conn, user_id=1, transcription=out_text, version=1)
+
     return {"message": out_text, "tags": tags}
+
+
+@app.route("/user/<user_id>", methods=["GET"])
+async def user_info(user_id: int) -> Any:
+    """Get user info."""
+    info = connect.get_user(conn, user_id)
+    transcriptions = connect.get_user_transcriptions(conn, user_id)
+
+    return {"user_info": info, "transcriptions": transcriptions}
 
 
 @app.route("/", methods=["GET"])  # type: ignore
@@ -66,3 +79,6 @@ async def main() -> str:
 </body>
     """
     return content
+
+
+# flask --app main.py --debug run

@@ -7,7 +7,10 @@ from typing import Optional
 
 import openai
 
+from .db.connect import get_conn
+
 openai.api_key = os.environ["OPENAI_API_KEY"]
+db_conn = get_conn()
 
 TAGS_PATH = "data/tags"
 TEXT_PATH = "data/text"
