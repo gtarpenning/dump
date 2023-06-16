@@ -18,6 +18,9 @@ ALLOWED_EXTENSIONS = {"m4a", "mp3", "wav"}
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
 
 @app.route("/transcribe/", methods=["POST"])
 def upload_file() -> Any:
