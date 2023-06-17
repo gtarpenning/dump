@@ -103,7 +103,10 @@ class VoiceViewModel : NSObject, ObservableObject , AVAudioPlayerDelegate{
         struct DecodableType: Decodable {
             let message: String
             let tags: String
+            let tag_dates: String
         }
+        
+        let dateFormatter = DateFormatter()
 
         
 //        AF.request("http://127.0.0.1:8000/text/target").responseString { response in
@@ -120,9 +123,27 @@ class VoiceViewModel : NSObject, ObservableObject , AVAudioPlayerDelegate{
                 if response.value != nil {
                     self.whisperText = response.value?.message ?? ""
                     
-                    let raw = response.value?.tags
-                    if raw != nil {
-                        self.tags = raw!.split(separator: ",").map {Tag(value: String($0), clicked: false)}
+                    if response.value?.tags != nil {
+                        if response.value?.tag_dates == nil {
+                            print("BAABBB")
+                            return
+                        }
+                        let dates = response.value!.tag_dates.split(separator: ",")
+                        let tags = response.value!.tags.split(separator: ",")
+                        
+                        if dates.count != tags.count {
+                            print("MISMATCH COUNT")
+                            print(dates)
+                            print(tags)
+                            return
+                        }
+                        
+                        for i in 0...tags.count {
+                            let date = dateFormatter.date(from: String(dates[i]))
+                            self.tags.append(
+                                Tag(value: String(tags[i]), clicked: false, date: date)
+                            )
+                        }
                     }
                     self.loading = false
                 }

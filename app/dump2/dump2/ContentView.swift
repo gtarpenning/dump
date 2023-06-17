@@ -121,7 +121,7 @@ struct ContentView: View {
                             }
                         }
                         .padding(.trailing, 20)
-                        NavigationLink(destination: Text("Calendar View")) {
+                        NavigationLink(destination: CalendarInsightView()) {
                             ZStack {
                                 Image(systemName: "calendar")
                                     .resizable()

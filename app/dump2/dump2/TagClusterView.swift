@@ -10,6 +10,7 @@ import SwiftUI
 struct Tag: Hashable {
     let value: String
     let clicked: Bool
+    let date: Date?
 }
 
 struct TagClusterView: View {
@@ -39,9 +40,9 @@ struct TagClusterView: View {
 
 let text = "This is some basic text"
 let tags = [
-    Tag(value: "tag1", clicked: true),
-    Tag(value: "tag2", clicked: false),
-    Tag(value: "long tag 1", clicked: true),
+    Tag(value: "tag1", clicked: true, date: Date()),
+    Tag(value: "tag2", clicked: false, date: Date()),
+    Tag(value: "long tag 1", clicked: true, date: nil),
 ]
 
 struct TagClusterView_Previews: PreviewProvider {
