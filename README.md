@@ -31,6 +31,14 @@ https://github.com/gtarpenning/dump/assets/19414170/84f6358a-5bb8-435e-b097-09f4
   Progress:
 
   <img width="375" alt="Screenshot 2023-06-17 at 11 58 35 AM" src="https://github.com/gtarpenning/dump/assets/19414170/665620e5-3f62-4fd0-9760-0efe3f48ac01">
+  
+  Ignore the terrible state bug (where it doesnt update until the cal is clicked)
+  
+
+https://github.com/gtarpenning/dump/assets/19414170/9fd197ef-33c2-4704-90f2-4779ea9a8a14
+
+
+  
 
 3. Home page
 4. Settings page
