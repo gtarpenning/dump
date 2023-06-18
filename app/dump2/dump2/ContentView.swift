@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject var vm = VoiceViewModel()
-    
+        
     @State private var showingList = false
     @State private var showingAlert = false
     

@@ -50,18 +50,18 @@ struct CalendarContentView: View {
     private let weekDayFormatter: DateFormatter
     private let fullFormatter: DateFormatter
     
-    private let selectedDates: [Date]
+    @Binding private var selectedTags: [Tag]
 
-    @State private var selectedDate = Self.now
+    @State var selectedDate = Self.now
     private static var now = Date() // Cache now
 
-    init(calendar: Calendar, dates: [Date]) {
+    init(calendar: Calendar, tags: Binding<[Tag]>) {
         self.calendar = calendar
         self.monthFormatter = DateFormatter(dateFormat: "MMMM", calendar: calendar)
         self.dayFormatter = DateFormatter(dateFormat: "d", calendar: calendar)
         self.weekDayFormatter = DateFormatter(dateFormat: "EEEEE", calendar: calendar)
         self.fullFormatter = DateFormatter(dateFormat: "MMMM dd, yyyy", calendar: calendar)
-        self.selectedDates = dates
+        self._selectedTags = tags
     }
 
     var body: some View {
@@ -77,11 +77,8 @@ struct CalendarContentView: View {
                         Text("00")
                             .padding(8)
                             .foregroundColor(.clear)
-                            .background(
-                                calendar.isDate(date, inSameDayAs: selectedDate) ? Color.red
-                                    : calendar.isDateInToday(date) ? .green
-                                    : .blue
-                            )
+                            .background(getCalCellBackgroundColor(
+                                date: date, selectedDate: selectedDate))
                             .cornerRadius(8)
                             .accessibilityHidden(true)
                             .overlay(
@@ -149,7 +146,7 @@ struct CalendarContentView: View {
                     .padding(.bottom, 6)
                 }
             )
-            .equatable()
+//            .equatable()
         }
         .padding()
     }
@@ -214,6 +211,27 @@ extension CalendarView: Equatable {
 
 // MARK: - Helpers
 
+private extension CalendarContentView {
+    func getCalCellBackgroundColor(date: Date, selectedDate: Date) -> Color {
+        let selectedDates = self.selectedTags.filter { tag in
+            return tag.clicked
+        }.flatMap({ $0.dates })
+        
+        print("selectedDates \(selectedDates)")
+        
+        if calendar.isDate(selectedDate, inSameDayAs: date) {
+            return Color.red
+        }
+        if selectedDates.contains(date) {
+            return Color.orange
+        }
+        if date > Date() {
+            return Color.blue.opacity(0.5)
+        }
+        return Color.blue
+    }
+}
+
 private extension CalendarView {
     func makeDays() -> [Date] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: date),
@@ -269,7 +287,7 @@ private extension Date {
     }
 }
 
-private extension DateFormatter {
+public extension DateFormatter {
     convenience init(dateFormat: String, calendar: Calendar) {
         self.init()
         self.dateFormat = dateFormat
@@ -277,10 +295,34 @@ private extension DateFormatter {
     }
 }
 
-let testDates = [Date()]
 
 struct CalendarView_Previews: PreviewProvider {
+    static var calendar = Calendar(identifier: .gregorian)
+    static var formatter = DateFormatter(dateFormat:"yyyy/MM/dd", calendar: calendar)
+    
+    @State static var testTags = [
+        Tag(value: "tag1", clicked: false, dates: [
+            formatter.date(from: "2023/06/12")!,
+            formatter.date(from: "2023/06/13")!,
+            formatter.date(from: "2023/06/14")!,
+            formatter.date(from: "2023/06/16")!,
+        ]),
+        Tag(value: "tag 1234", clicked: false, dates: [
+            formatter.date(from: "2023/06/01")!,
+            formatter.date(from: "2023/06/02")!,
+            formatter.date(from: "2023/06/04")!,
+            formatter.date(from: "2023/06/06")!,
+            formatter.date(from: "2023/06/09")!,
+            formatter.date(from: "2023/06/012")!,
+            formatter.date(from: "2023/06/014")!,
+        ]),
+        Tag(value: "long tag 1", clicked: false, dates: [
+            formatter.date(from: "2023/06/16")!,
+            formatter.date(from: "2023/06/14")!,
+        ])
+    ]
+    
     static var previews: some View {
-        CalendarContentView(calendar: Calendar(identifier: .gregorian), dates: testDates)
+        CalendarContentView(calendar: calendar, tags: $testTags)
     }
 }

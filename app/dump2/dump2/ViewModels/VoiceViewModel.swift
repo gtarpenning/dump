@@ -30,13 +30,6 @@ class VoiceViewModel : NSObject, ObservableObject , AVAudioPlayerDelegate{
     // AI SHIT
     var playingURL : URL?
     
-    override init(){
-        super.init()
-        
-        fetchAllRecording()
-        
-    }
-    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
        
         for i in 0..<recordingsList.count {
@@ -139,9 +132,13 @@ class VoiceViewModel : NSObject, ObservableObject , AVAudioPlayerDelegate{
                         }
                         
                         for i in 0...tags.count {
-                            let date = dateFormatter.date(from: String(dates[i]))
+                            let tagDates = dates[i].split(separator: ";")
+                            var outDates: [Date] = []
+                            for j in 0...tagDates.count {
+                                outDates.append(dateFormatter.date(from: String(tagDates[j]))!)
+                            }
                             self.tags.append(
-                                Tag(value: String(tags[i]), clicked: false, date: date)
+                                Tag(value: String(tags[i]), clicked: false, dates: outDates)
                             )
                         }
                     }

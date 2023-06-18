@@ -7,16 +7,16 @@
 
 import SwiftUI
 
-struct Tag: Hashable {
+public struct Tag: Hashable {
     let value: String
-    let clicked: Bool
-    let date: Date?
+    var clicked: Bool
+    var dates: [Date]
 }
 
 struct TagClusterView: View {
     
     var text: String = ""  // Defaults to None
-    var tags: [Tag]
+    @State var tags: [Tag]
     
     var body: some View {
         VStack(alignment : .center) {
@@ -30,8 +30,8 @@ struct TagClusterView: View {
             Text("Tags:")
                 .font(.system(size:30, weight: .bold))
             
-            ForEach(tags, id: \.self) { tag in
-                TagRowView(tag: tag.value, clicked: tag.clicked)
+            ForEach(self.$tags, id: \.self) { tag in
+                TagRowView(tag: tag)
             }
             Spacer()
         }
@@ -40,9 +40,9 @@ struct TagClusterView: View {
 
 let text = "This is some basic text"
 let tags = [
-    Tag(value: "tag1", clicked: true, date: Date()),
-    Tag(value: "tag2", clicked: false, date: Date()),
-    Tag(value: "long tag 1", clicked: true, date: nil),
+    Tag(value: "tag1", clicked: true, dates: [Date()]),
+    Tag(value: "tag2", clicked: false, dates: [Date()]),
+    Tag(value: "long tag 1", clicked: true, dates: []),
 ]
 
 struct TagClusterView_Previews: PreviewProvider {

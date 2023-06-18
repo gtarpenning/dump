@@ -8,30 +8,29 @@
 import SwiftUI
 
 struct TagRowView: View {
-    var tag: String
-    @State var clicked: Bool
+    @Binding var tag: Tag
     
     var body: some View {
         ZStack {
-            if clicked {
+            if tag.clicked {
                 RoundedRectangle(cornerRadius: 25, style: .continuous)
                     .fill(.green)
-                    .frame(width: self.getLen(tag: tag), height: 25)
+                    .frame(width: self.getLen(text: tag.value), height: 25)
             } else {
                 RoundedRectangle(cornerRadius: 25, style: .continuous)
                     .fill(.orange)
-                    .frame(width: self.getLen(tag: tag), height: 25)
+                    .frame(width: self.getLen(text: tag.value), height: 25)
             }
-            Button(action: {clicked = !clicked}) {
-                Text(tag)
+            Button(action: {tag.clicked = !tag.clicked}) {
+                Text(tag.value)
                     .font(.system(size:18))
                     .foregroundColor(.white)
             }
         }
     }
     
-    func getLen(tag: String) -> CGFloat {
-        var l = tag.count
+    func getLen(text: String) -> CGFloat {
+        var l = text.count
         
         // length adjustments
         if l < 6 {
@@ -49,7 +48,10 @@ struct TagRowView: View {
 }
 
 struct TagRowView_Previews: PreviewProvider {
+    
+    @State static var testTag = Tag(value: "running", clicked: true, dates: [Date()])
+    
     static var previews: some View {
-        TagRowView(tag: "running", clicked: true)
+        TagRowView(tag: $testTag)
     }
 }
