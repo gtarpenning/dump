@@ -3,14 +3,14 @@ import json
 import os
 import re
 from argparse import Namespace
-from typing import Optional
+from typing import List, Optional
 
 import openai
 
-from .db.connect import get_conn
+from .db.connect import DBConnection
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-db_conn = get_conn()
+db = DBConnection()
 
 TAGS_PATH = "data/tags"
 TEXT_PATH = "data/text"
@@ -48,7 +48,7 @@ def parse_text_with_chatgpt(
     use_cache: bool = True,
     verbose: bool = False,
     target: bool = False,
-) -> str:
+) -> List[str]:
     """Parse a paragraph of text into tags."""
     if use_cache and filename is not None:
         if f"{filename}.json" in os.listdir(TAGS_PATH):
@@ -92,16 +92,15 @@ def parse_text_with_chatgpt(
     print(f'Response: {response["choices"][0]["message"]["content"]}')
     # regex to extract between two curly braces
     tag_list = re.findall(r"\{.*?\}", response["choices"][0]["message"]["content"])
-    tag_str = ""
     if len(tag_list) > 0:
-        tag_str = ",".join([x.replace('"', "").strip() for x in tag_list[0].split(",")])
+        tags = tag_list[0].replace("{", "").replace("}", "").replace('"', "").replace("'", "").split(",")
     else:
         print("No tags found. Returning empty.")
-        tag_str = "{}"
+        tags = []
 
-    print(f"{tag_str=}")
+    print(f"{tag_list=}")
 
-    return tag_str
+    return tags
 
 
 def parse() -> Namespace:

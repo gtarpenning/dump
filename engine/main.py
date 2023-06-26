@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 from typing import Any
 
 import openai
@@ -6,10 +7,10 @@ from flask import Flask, flash, redirect, request
 from werkzeug.utils import secure_filename
 
 from .cli_v1 import parse_text_with_chatgpt
-from .db import connect
+from .db.connect import DBConnection
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-conn = connect.get_conn()
+db = DBConnection()
 
 WHISPER_PROMPT = "Um, well, I sort of did this at 10:00, and also at 1:00 I worked out."
 UPLOAD_FOLDER = "./data/audio/remote"
@@ -56,16 +57,26 @@ def upload_file() -> Any:
     # for now, delete the files after we're done with them
     os.remove(filepath)
 
-    connect.put_user_transcription(conn, user_id=1, transcription=out_text, version=1)
+    db.put_user_transcription(user_id=1, transcription=out_text, version=1)
+    db.put_user_tags(user_id=1, tags=tags)
 
-    return {"message": out_text, "tags": tags}
+    tag_date_list = db.get_user_tags_from_tags(user_id=1, tags=tags)
+
+    # get date string from tag occurences
+    dates = defaultdict(list)
+    for tag in tag_date_list:
+        dates[tag[0]] += [tag[1]]
+
+    tag_date_str = ";".join([",".join(dates[x]) for x in dates])
+
+    return {"message": out_text, "tags": tags, "tag_dates": tag_date_str}
 
 
 @app.route("/user/<user_id>", methods=["GET"])
 async def user_info(user_id: int) -> Any:
     """Get user info."""
-    info = connect.get_user(conn, user_id)
-    transcriptions = connect.get_user_transcriptions(conn, user_id)
+    info = db.get_user(user_id)
+    transcriptions = db.get_user_transcriptions(user_id)
 
     return {"user_info": info, "transcriptions": transcriptions}
 
