@@ -58,6 +58,7 @@ def upload_file() -> Any:
     os.remove(filepath)
 
     db.put_user_transcription(user_id=1, transcription=out_text, version=1)
+    db.put_user_tags(user_id=1, tags=tags)
 
     tag_date_list = db.get_user_tags_from_tags(user_id=1, tags=tags)
 

@@ -91,13 +91,29 @@ class DBConnection:
         )
         self.conn.commit()
 
-    def get_user_tags_from_tags(self, user_id, tags: str) -> List[List[Any]]:
+    def get_user_tags_from_tags(self, user_id, tags: List[str]) -> List[List[Any]]:
         cur = self.conn.cursor()
-        tag_str = f"{tags.replace(' ', ',')}"
-        cur.execute(f"SELECT * FROM tags WHERE user_id = {user_id} AND (tag IN ({tag_str}));")
+        tag_str = list_to_sql_str(tags)
+        cur.execute(f"SELECT * FROM tags WHERE user_id = {user_id} AND (tag IN {tag_str});")
         occurences: List[List[Any]] = cur.fetchall()
 
         return occurences
+
+    def put_user_tags(self, user_id, tags: List[str]) -> None:
+        cur = self.conn.cursor()
+
+        date = datetime.datetime.now()
+        for tag in tags:
+            cur.execute(
+                "INSERT INTO tags (user_id, tag, date) VALUES (%s, %s, %s)",
+                (user_id, tag, date),
+            )
+        self.conn.commit()
+
+
+def list_to_sql_str(words: List[str]) -> str:
+    list_str = ", ".join([f"'{x.strip()}'" for x in words])
+    return f"({list_str})"
 
 
 def main() -> None:
