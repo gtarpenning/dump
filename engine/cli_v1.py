@@ -32,7 +32,9 @@ def transcribe(filename: str, use_cache: bool = True, verbose: bool = False) -> 
     print(f"Hitting WHISPER API, transcribing: {filename}")  # always print this
     text = ""
     with open(f"{AUDIO_PATH}/{filename}.m4a", "rb") as audio_file:
-        transcript = openai.Audio.transcribe("whisper-1", audio_file, prompt=WHISPER_PROMPT)
+        transcript = openai.Audio.transcribe(
+            "whisper-1", audio_file, prompt=WHISPER_PROMPT
+        )
         text = str(transcript["text"])
 
     # cache
@@ -73,7 +75,9 @@ def parse_text_with_chatgpt(
         prompt = f"{preamble}And as an Extractor you return a JSON of relevant succinct tags \
             like this example:\n{example2}\nReturn only the json"
     else:
-        example = "I am medium energy, I have had a 9 productive day, I am a low happiness"
+        example = (
+            "I am medium energy, I have had a 9 productive day, I am a low happiness"
+        )
         preamble = f"You are an extractor. As an extractor you extract user content in this format:\n{example}\n"
         example2 = "{energy : 5, productivity : 9, happiness : 2}"
         prompt = f"{preamble} And as an extractor you return a score bounded between 1-10 that \
@@ -93,7 +97,14 @@ def parse_text_with_chatgpt(
     # regex to extract between two curly braces
     tag_list = re.findall(r"\{.*?\}", response["choices"][0]["message"]["content"])
     if len(tag_list) > 0:
-        tags = tag_list[0].replace("{", "").replace("}", "").replace('"', "").replace("'", "").split(",")
+        tags = (
+            tag_list[0]
+            .replace("{", "")
+            .replace("}", "")
+            .replace('"', "")
+            .replace("'", "")
+            .split(",")
+        )
     else:
         print("No tags found. Returning empty.")
         tags = []
@@ -141,7 +152,9 @@ def parse() -> Namespace:
         action="store_true",
         default=False,
     )
-    parser.add_argument("--all", "-a", help="all files in audio dir", action="store_true", default=False)
+    parser.add_argument(
+        "--all", "-a", help="all files in audio dir", action="store_true", default=False
+    )
     args = parser.parse_args()
     return args
 

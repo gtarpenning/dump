@@ -3,6 +3,7 @@ from collections import defaultdict
 from typing import Any
 
 import openai
+import boto3
 from flask import Flask, flash, redirect, request
 from werkzeug.utils import secure_filename
 
@@ -15,6 +16,7 @@ db = DBConnection()
 WHISPER_PROMPT = "Um, well, I sort of did this at 10:00, and also at 1:00 I worked out."
 UPLOAD_FOLDER = "./data/audio/remote"
 ALLOWED_EXTENSIONS = {"m4a", "mp3", "wav"}
+S3_BUCKET = "for-dump"
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -43,7 +45,9 @@ def upload_file() -> Any:
     out_text, tags = "", ""
     with open(filepath, "rb") as newfile:
         try:
-            transcript = openai.Audio.transcribe("whisper-1", newfile, prompt=WHISPER_PROMPT)
+            transcript = openai.Audio.transcribe(
+                "whisper-1", newfile, prompt=WHISPER_PROMPT
+            )
         except openai.error.InvalidRequestError as e:
             print(f"Error: {e}")
             return {"message": "Error: " + str(e)}
@@ -53,8 +57,8 @@ def upload_file() -> Any:
         tags = tags[1:-1]  # TODO(zam): fix me
         print(f"{type(transcript)=} {transcript=} {tags=}")
 
-    # TODO(gst): upload to S3
-    # for now, delete the files after we're done with them
+    s3 = boto3.client("s3")
+    s3.upload_file(filepath, S3_BUCKET, filename)
     os.remove(filepath)
 
     db.put_user_transcription(user_id=1, transcription=out_text, version=1)
