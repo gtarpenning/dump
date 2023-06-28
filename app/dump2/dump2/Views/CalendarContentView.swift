@@ -28,7 +28,6 @@ extension Calendar {
         }
       }
     }
-
     return dates
   }
 }
@@ -111,7 +110,6 @@ struct CalendarContentView: View {
                 else {
                   return
                 }
-
                 selectedDate = newDate
               }
             } label: {
@@ -134,7 +132,6 @@ struct CalendarContentView: View {
                 else {
                   return
                 }
-
                 selectedDate = newDate
               }
             } label: {
@@ -150,7 +147,6 @@ struct CalendarContentView: View {
           .padding(.bottom, 6)
         }
       )
-      //            .equatable()
     }
     .padding()
   }

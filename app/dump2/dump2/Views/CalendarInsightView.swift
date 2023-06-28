@@ -17,8 +17,6 @@ struct CalendarInsightView: View {
         calendar: Calendar(identifier: .gregorian),
         tags: $selectedTags
       )
-      //            TagSelectorView(selectedTags)
-      //            TagClusterView(tags: self.selectedTags)
       Spacer()
       ForEach(self.$selectedTags, id: \.self) { tag in
         TagRowView(tag: tag)
