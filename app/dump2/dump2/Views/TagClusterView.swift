@@ -7,47 +7,42 @@
 
 import SwiftUI
 
-public struct Tag: Hashable {
-    let value: String
-    var clicked: Bool
-    var dates: [Date]
-}
-
 struct TagClusterView: View {
-    
-    var text: String = ""  // Defaults to None
-    @State var tags: [Tag]
-    
-    var body: some View {
-        VStack(alignment : .center) {
-            Spacer()
-            if text != "" {
-                Text(text)
-                    .font(.system(size:30))
-                    .foregroundColor(.gray)
-            }
-            Spacer()
-            Text("Tags:")
-                .font(.system(size:30, weight: .bold))
-            
-            ForEach(self.$tags, id: \.self) { tag in
-                TagRowView(tag: tag)
-            }
-            Spacer()
-        }
-    }
-}
+  var text: String = ""
+  @State var tags: [Tag]
 
-let text = "This is some basic text"
-let tags = [
-    Tag(value: "tag1", clicked: true, dates: [Date()]),
-    Tag(value: "tag2", clicked: false, dates: [Date()]),
-    Tag(value: "long tag 1", clicked: true, dates: []),
-]
+  var body: some View {
+    VStack(alignment: .center) {
+      Spacer()
+      if !text.isEmpty {
+        Text(text)
+          .font(.system(size: 30))
+          .foregroundColor(.gray)
+      }
+      Spacer()
+      Text("Tags:")
+        .font(.system(size: 30, weight: .bold))
+
+      ScrollView(.vertical) {
+        VStack(spacing: 15) {
+          ForEach(tags.indices, id: \.self) { index in
+            TagView(tag: $tags[index])
+          }
+        }
+        .padding(.vertical)
+      }
+      Spacer()
+    }
+  }
+}
 
 struct TagClusterView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        TagClusterView(text: text, tags: tags)
-    }
+  static var previews: some View {
+    let tags = [
+      Tag(value: "tag1", clicked: true, dates: [Date()]),
+      Tag(value: "tag2", clicked: false, dates: [Date()]),
+      Tag(value: "very long tag 1", clicked: true, dates: []),
+    ]
+    return TagClusterView(tags: tags)
+  }
 }

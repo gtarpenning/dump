@@ -14,7 +14,6 @@ struct ContentView: View {
   @State private var showingAlert = false
   @State private var effect1 = false
   @State private var effect2 = false
-
   @State private var isLoading = false
 
   var body: some View {
@@ -31,7 +30,6 @@ struct ContentView: View {
             }
           }
           Spacer()
-
           if vm.whisperText != "" {
             TagClusterView(text: vm.whisperText + "...", tags: vm.tags)
           } else {
@@ -87,7 +85,6 @@ struct ContentView: View {
                 .onAppear {
                   self.effect1.toggle()
                 }
-
               Image(systemName: vm.isRecording ? "stop.circle.fill" : "mic.circle.fill")
                 .foregroundColor(.white)
                 .font(.system(size: 50))

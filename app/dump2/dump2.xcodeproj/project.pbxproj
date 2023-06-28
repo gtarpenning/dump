@@ -11,7 +11,6 @@
 		0635EF1B2A3E29DB003CFBEA /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0635EF1A2A3E29DB003CFBEA /* AudioKit */; };
 		0635EF202A3E2A7B003CFBEA /* TagClusterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0635EF1F2A3E2A7B003CFBEA /* TagClusterView.swift */; };
 		0635EF222A3E2D6C003CFBEA /* CalendarInsightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0635EF212A3E2D6C003CFBEA /* CalendarInsightView.swift */; };
-		0635EF242A3E35A2003CFBEA /* TagSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0635EF232A3E35A2003CFBEA /* TagSelectorView.swift */; };
 		06D677DB2A2425A600194153 /* dump2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D677DA2A2425A600194153 /* dump2App.swift */; };
 		06D677DD2A2425A600194153 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D677DC2A2425A600194153 /* ContentView.swift */; };
 		06D677DF2A2425A700194153 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 06D677DE2A2425A700194153 /* Assets.xcassets */; };
@@ -24,7 +23,8 @@
 		06D6780B2A24261600194153 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D6780A2A24261600194153 /* Date.swift */; };
 		06D6780D2A24263300194153 /* AfterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D6780C2A24263300194153 /* AfterView.swift */; };
 		06D678232A253B3800194153 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 06D678222A253B3800194153 /* Alamofire */; };
-		06D678252A25485900194153 /* TagRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D678242A25485900194153 /* TagRowView.swift */; };
+		6AD7FB062A4CCEC300192169 /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD7FB052A4CCEC300192169 /* TagModel.swift */; };
+		6AD7FB082A4CCF7300192169 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD7FB072A4CCF7300192169 /* TagView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +48,6 @@
 		0635EF172A3E287C003CFBEA /* CalendarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarContentView.swift; sourceTree = "<group>"; };
 		0635EF1F2A3E2A7B003CFBEA /* TagClusterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagClusterView.swift; sourceTree = "<group>"; };
 		0635EF212A3E2D6C003CFBEA /* CalendarInsightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarInsightView.swift; sourceTree = "<group>"; };
-		0635EF232A3E35A2003CFBEA /* TagSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelectorView.swift; sourceTree = "<group>"; };
 		06D677D72A2425A600194153 /* dump2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dump2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06D677DA2A2425A600194153 /* dump2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dump2App.swift; sourceTree = "<group>"; };
 		06D677DC2A2425A600194153 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -63,7 +62,8 @@
 		06D678082A24260A00194153 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
 		06D6780A2A24261600194153 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		06D6780C2A24263300194153 /* AfterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterView.swift; sourceTree = "<group>"; };
-		06D678242A25485900194153 /* TagRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRowView.swift; sourceTree = "<group>"; };
+		6AD7FB052A4CCEC300192169 /* TagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
+		6AD7FB072A4CCF7300192169 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				06D678052A2425DD00194153 /* VoiceViewModel.swift */,
+				6AD7FB052A4CCEC300192169 /* TagModel.swift */,
 				06D678082A24260A00194153 /* Recording.swift */,
 				06D6780A2A24261600194153 /* Date.swift */,
 			);
@@ -164,11 +165,10 @@
 			isa = PBXGroup;
 			children = (
 				06D677DC2A2425A600194153 /* ContentView.swift */,
-				0635EF172A3E287C003CFBEA /* CalendarContentView.swift */,
-				0635EF212A3E2D6C003CFBEA /* CalendarInsightView.swift */,
-				06D678242A25485900194153 /* TagRowView.swift */,
+				6AD7FB072A4CCF7300192169 /* TagView.swift */,
 				0635EF1F2A3E2A7B003CFBEA /* TagClusterView.swift */,
-				0635EF232A3E35A2003CFBEA /* TagSelectorView.swift */,
+				0635EF212A3E2D6C003CFBEA /* CalendarInsightView.swift */,
+				0635EF172A3E287C003CFBEA /* CalendarContentView.swift */,
 				06D6780C2A24263300194153 /* AfterView.swift */,
 			);
 			path = Views;
@@ -312,16 +312,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AD7FB062A4CCEC300192169 /* TagModel.swift in Sources */,
 				06D678062A2425DD00194153 /* VoiceViewModel.swift in Sources */,
 				06D6780D2A24263300194153 /* AfterView.swift in Sources */,
 				06D6780B2A24261600194153 /* Date.swift in Sources */,
 				06D677DD2A2425A600194153 /* ContentView.swift in Sources */,
 				06D677DB2A2425A600194153 /* dump2App.swift in Sources */,
+				6AD7FB082A4CCF7300192169 /* TagView.swift in Sources */,
 				0635EF182A3E287C003CFBEA /* CalendarContentView.swift in Sources */,
-				06D678252A25485900194153 /* TagRowView.swift in Sources */,
 				0635EF222A3E2D6C003CFBEA /* CalendarInsightView.swift in Sources */,
 				06D678092A24260A00194153 /* Recording.swift in Sources */,
-				0635EF242A3E35A2003CFBEA /* TagSelectorView.swift in Sources */,
 				0635EF202A3E2A7B003CFBEA /* TagClusterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

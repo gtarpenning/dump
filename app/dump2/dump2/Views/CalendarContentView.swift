@@ -41,15 +41,16 @@ extension DateFormatter {
 }
 
 struct CalendarContentView: View {
+  @Binding private var selectedTags: [Tag]
+
+  @State var selectedDate = Self.now
+
   private let calendar: Calendar
   private let monthFormatter: DateFormatter
   private let dayFormatter: DateFormatter
   private let weekDayFormatter: DateFormatter
   private let fullFormatter: DateFormatter
 
-  @Binding private var selectedTags: [Tag]
-
-  @State var selectedDate = Self.now
   private static var now = Date()  // Cache now
 
   init(calendar: Calendar, tags: Binding<[Tag]>) {
@@ -153,17 +154,15 @@ struct CalendarContentView: View {
 }
 
 // MARK: - Component
-
 public struct CalendarView<Day: View, Header: View, Title: View, Trailing: View>: View {
-  // Injected dependencies
-  private var calendar: Calendar
   @Binding private var date: Date
+
+  private var calendar: Calendar
   private let content: (Date) -> Day
   private let trailing: (Date) -> Trailing
   private let header: (Date) -> Header
   private let title: (Date) -> Title
 
-  // Constants
   private let daysInWeek = 7
 
   public init(
@@ -202,17 +201,16 @@ public struct CalendarView<Day: View, Header: View, Title: View, Trailing: View>
 }
 
 // MARK: - Conformances
-
 extension CalendarView: Equatable {
   public static func == (
-    lhs: CalendarView<Day, Header, Title, Trailing>, rhs: CalendarView<Day, Header, Title, Trailing>
+    lhs: CalendarView<Day, Header, Title, Trailing>,
+    rhs: CalendarView<Day, Header, Title, Trailing>
   ) -> Bool {
     lhs.calendar == rhs.calendar && lhs.date == rhs.date
   }
 }
 
 // MARK: - Helpers
-
 extension CalendarContentView {
   fileprivate func getCalCellBackgroundColor(date: Date, selectedDate: Date) -> Color {
     let selectedDates = self.selectedTags.filter { tag in
@@ -242,7 +240,6 @@ extension CalendarView {
     else {
       return []
     }
-
     let dateInterval = DateInterval(start: monthFirstWeek.start, end: monthLastWeek.end)
     return calendar.generateDays(for: dateInterval)
   }
@@ -261,15 +258,12 @@ extension Calendar {
       matchingPolicy: .nextTime
     ) { date, _, stop in
       guard let date = date else { return }
-
       guard date < dateInterval.end else {
         stop = true
         return
       }
-
       dates.append(date)
     }
-
     return dates
   }
 
