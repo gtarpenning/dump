@@ -11,9 +11,7 @@ class DBConnection:
 
     def get_conn(self) -> psycopg2.extensions.connection:
         ps = os.getenv("POSTGRES_PASSWORD")
-        db_str = (
-            f"host=dump-db.fly.dev port=5433 user=postgres password={ps} dbname=dump connect_timeout=5 sslmode=require"
-        )
+        db_str = f"host=dump-db.fly.dev port=5433 user=postgres password={ps} dbname=dump connect_timeout=5 sslmode=require"
         conn = psycopg2.connect(db_str)
         return conn
 
@@ -25,7 +23,9 @@ class DBConnection:
 
     def get_db_tables(self) -> List[str]:
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM information_schema.tables WHERE table_schema = 'public';")
+        cur.execute(
+            "SELECT * FROM information_schema.tables WHERE table_schema = 'public';"
+        )
         db_tables = cur.fetchall()
 
         table_names: List[str] = [x[2] for x in db_tables]
@@ -39,7 +39,9 @@ class DBConnection:
         )
         db_table_info = cur.fetchall()
 
-        formatted: List[Dict[str, str]] = [{"col": x[1], "type": x[2]} for x in db_table_info]
+        formatted: List[Dict[str, str]] = [
+            {"col": x[1], "type": x[2]} for x in db_table_info
+        ]
 
         return formatted
 
@@ -59,13 +61,17 @@ class DBConnection:
         cur = self.conn.cursor()
 
         created_on = datetime.datetime.now()
-        cur.execute("INSERT INTO users (email, created_on) VALUES (%s, %s)", (email, created_on))
+        cur.execute(
+            "INSERT INTO users (email, created_on) VALUES (%s, %s)", (email, created_on)
+        )
         self.conn.commit()
 
     def update_user(self, user_id, new_email) -> None:
         cur = self.conn.cursor()
 
-        cur.execute("UPDATE users SET email = %s WHERE user_id = %s", (new_email, user_id))
+        cur.execute(
+            "UPDATE users SET email = %s WHERE user_id = %s", (new_email, user_id)
+        )
         self.conn.commit()
 
     def get_user_tags(self, user_id) -> List[Any]:
@@ -94,7 +100,9 @@ class DBConnection:
     def get_user_tags_from_tags(self, user_id, tags: List[str]) -> List[List[Any]]:
         cur = self.conn.cursor()
         tag_str = list_to_sql_str(tags)
-        cur.execute(f"SELECT * FROM tags WHERE user_id = {user_id} AND (tag IN {tag_str});")
+        cur.execute(
+            f"SELECT * FROM tags WHERE user_id = {user_id} AND (tag IN {tag_str});"
+        )
         occurences: List[List[Any]] = cur.fetchall()
 
         return occurences
