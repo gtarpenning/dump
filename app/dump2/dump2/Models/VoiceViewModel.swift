@@ -97,12 +97,6 @@ class VoiceViewModel: NSObject, ObservableObject, AVAudioPlayerDelegate {
 
     let dateFormatter = DateFormatter()
 
-    //        AF.request("http://127.0.0.1:8000/text/target").responseString { response in
-    //            if response.value != nil {
-    //                print("Response String: \(response.value!)")
-    //            }
-    //        }
-
     AF.upload(
       multipartFormData: { multipartFormData in
         multipartFormData.append(self.curFileName!, withName: "file")

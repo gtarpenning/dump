@@ -22,6 +22,7 @@ struct TagClusterView: View {
       Spacer()
       Text("Tags:")
         .font(.system(size: 30, weight: .bold))
+        .bold()
 
       ScrollView(.vertical) {
         VStack(spacing: 15) {
