@@ -15,12 +15,9 @@ TAG_WORD_CORPUS = ["exercise", "work", "drinking", "food", "clean"]
 
 """
 TODO:
-    - take lists from the load_data() function and:
-        - for target numpy array the target
-        - for words one-hot-encode the words into a dict for tags and array the data (bound between 0,1)
-    - put all the fake-data making in to a class with @classmethods
-    - Make analysis with logistic regression 
-    - Class the data loading and the ML inference.
+    - Gen a ton of user data in files
+    - Write a function to run through the user data
+    - Create output API format for async function that does all the "ml" work
 
 LATE TODO:
     - there are a lot of things here that can be done by itertools or a apply method or something for code cleanliness
