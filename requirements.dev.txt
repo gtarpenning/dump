@@ -1,5 +1,9 @@
-# install base reqs
--r build/requirements.txt
+# DONT install linux kernal reqs anymore
+# -r build/requirements.txt
+
+# reqs
+flask[async]
+openai
 
 # also install dev reqs
 pre-commit
@@ -7,3 +11,4 @@ black
 mypy
 isort
 pylint
+pydantic
